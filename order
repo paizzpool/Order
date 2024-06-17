@@ -1,0 +1,98 @@
+public class Order {
+    private String orderId;
+    private String customerName;
+    private String customerAddress;
+    private String productName;
+    private int quantityOrdered;
+    private double pricePerUnit;
+    private double totalPrice;
+    private String orderStatus;
+
+    public Order(String orderId, String customerName, String customerAddress, String productName, int quantityOrdered, double pricePerUnit, String orderStatus) {
+        this.orderId = orderId;
+        this.customerName = customerName;
+        this.customerAddress = customerAddress;
+        this.productName = productName;
+        this.quantityOrdered = quantityOrdered;
+        this.pricePerUnit = pricePerUnit;
+        this.totalPrice = quantityOrdered * pricePerUnit;
+        this.orderStatus = orderStatus;
+    }
+
+    // Getters and setters for all attributes
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public int getQuantityOrdered() {
+        return quantityOrdered;
+    }
+
+    public void setQuantityOrdered(int quantityOrdered) {
+        this.quantityOrdered = quantityOrdered;
+        this.totalPrice = this.quantityOrdered * this.pricePerUnit;
+    }
+
+    public double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public void setPricePerUnit(double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
+        this.totalPrice = this.quantityOrdered * this.pricePerUnit;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId='" + orderId + '\'' +
+                ", customerName='" + customerName + '\'' +
+                ", customerAddress='" + customerAddress + '\'' +
+                ", productName='" + productName + '\'' +
+                ", quantityOrdered=" + quantityOrdered +
+                ", pricePerUnit=" + pricePerUnit +
+                ", totalPrice=" + totalPrice +
+                ", orderStatus='" + orderStatus + '\'' +
+                '}';
+    }
+}
