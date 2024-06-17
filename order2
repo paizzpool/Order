@@ -1,0 +1,211 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class OrderManager {
+    private static final String FILE_NAME = "orders.txt";
+    private static ArrayList<Order> orderList = new ArrayList<>();
+
+    public static void main(String[] args) {
+        loadOrders();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Order Management System ---");
+            System.out.println("1. Add a new order");
+            System.out.println("2. Modify an existing order");
+            System.out.println("3. Remove an existing order");
+            System.out.println("4. Display orders");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addOrder(scanner);
+                    break;
+                case 2:
+                    modifyOrder(scanner);
+                    break;
+                case 3:
+                    removeOrder(scanner);
+                    break;
+                case 4:
+                    displayOrders(scanner);
+                    break;
+                case 5:
+                    saveOrders();
+                    System.out.println("Exiting the program...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void loadOrders() {
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] details = line.split(",");
+                Order order = new Order(
+                        details[0], // orderId
+                        details[1], // customerName
+                        details[2], // customerAddress
+                        details[3], // productName
+                        Integer.parseInt(details[4]), // quantityOrdered
+                        Double.parseDouble(details[5]), // pricePerUnit
+                        details[6] // orderStatus
+                );
+                orderList.add(order);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void saveOrders() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Order order : orderList) {
+                bw.write(order.getOrderId() + "," +
+                        order.getCustomerName() + "," +
+                        order.getCustomerAddress() + "," +
+                        order.getProductName() + "," +
+                        order.getQuantityOrdered() + "," +
+                        order.getPricePerUnit() + "," +
+                        order.getOrderStatus());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addOrder(Scanner scanner) {
+        System.out.print("Enter Order ID: ");
+        String orderId = scanner.nextLine();
+
+        for (Order order : orderList) {
+            if (order.getOrderId().equals(orderId)) {
+                System.out.println("Order ID already exists. Try again.");
+                return;
+            }
+        }
+
+        System.out.print("Enter Customer Name: ");
+        String customerName = scanner.nextLine();
+        System.out.print("Enter Customer Address: ");
+        String customerAddress = scanner.nextLine();
+        System.out.print("Enter Product Name: ");
+        String productName = scanner.nextLine();
+        System.out.print("Enter Quantity Ordered: ");
+        int quantityOrdered = scanner.nextInt();
+        System.out.print("Enter Price Per Unit: ");
+        double pricePerUnit = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter Order Status: ");
+        String orderStatus = scanner.nextLine();
+
+        Order order = new Order(orderId, customerName, customerAddress, productName, quantityOrdered, pricePerUnit, orderStatus);
+        orderList.add(order);
+        System.out.println("Order added successfully!");
+    }
+
+    private static void modifyOrder(Scanner scanner) {
+        System.out.print("Enter Order ID to modify: ");
+        String orderId = scanner.nextLine();
+
+        for (Order order : orderList) {
+            if (order.getOrderId().equals(orderId)) {
+                System.out.print("Enter new Customer Name: ");
+                String customerName = scanner.nextLine();
+                System.out.print("Enter new Customer Address: ");
+                String customerAddress = scanner.nextLine();
+                System.out.print("Enter new Product Name: ");
+                String productName = scanner.nextLine();
+                System.out.print("Enter new Quantity Ordered: ");
+                int quantityOrdered = scanner.nextInt();
+                System.out.print("Enter new Price Per Unit: ");
+                double pricePerUnit = scanner.nextDouble();
+                scanner.nextLine(); // Consume newline
+                System.out.print("Enter new Order Status: ");
+                String orderStatus = scanner.nextLine();
+
+                order.setCustomerName(customerName);
+                order.setCustomerAddress(customerAddress);
+                order.setProductName(productName);
+                order.setQuantityOrdered(quantityOrdered);
+                order.setPricePerUnit(pricePerUnit);
+                order.setOrderStatus(orderStatus);
+
+                System.out.println("Order modified successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Order ID not found.");
+    }
+
+    private static void removeOrder(Scanner scanner) {
+        System.out.print("Enter Order ID to remove: ");
+        String orderId = scanner.nextLine();
+
+        for (Order order : orderList) {
+            if (order.getOrderId().equals(orderId)) {
+                orderList.remove(order);
+                System.out.println("Order removed successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Order ID not found.");
+    }
+
+    private static void displayOrders(Scanner scanner) {
+        System.out.println("1. Display all orders");
+        System.out.println("2. Display orders by customer name");
+        System.out.println("3. Display orders by product name");
+        System.out.println("4. Display orders by status");
+        System.out.print("Enter your choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1:
+                for (Order order : orderList) {
+                    System.out.println(order);
+                }
+                break;
+            case 2:
+                System.out.print("Enter Customer Name: ");
+                String customerName = scanner.nextLine();
+                for (Order order : orderList) {
+                    if (order.getCustomerName().equalsIgnoreCase(customerName)) {
+                        System.out.println(order);
+                    }
+                }
+                break;
+            case 3:
+                System.out.print("Enter Product Name: ");
+                String productName = scanner.nextLine();
+                for (Order order : orderList) {
+                    if (order.getProductName().equalsIgnoreCase(productName)) {
+                        System.out.println(order);
+                    }
+                }
+                break;
+            case 4:
+                System.out.print("Enter Order Status: ");
+                String orderStatus = scanner.nextLine();
+                for (Order order : orderList) {
+                    if (order.getOrderStatus().equalsIgnoreCase(orderStatus)) {
+                        System.out.println(order);
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+}
